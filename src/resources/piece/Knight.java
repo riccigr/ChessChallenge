@@ -146,7 +146,7 @@ public class Knight extends GenericPiece{
 	 * Example:
 	 *            Piece
 	 *              |
-	 *              |_target 			    
+	 *       target_| 			    
 	 * 
 	 * @param row
 	 * @param column
