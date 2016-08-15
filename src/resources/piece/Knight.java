@@ -82,10 +82,10 @@ public class Knight extends GenericPiece{
 	/**
 	 * Validate if values are the same, to abstract when they are in the same L.
 	 * Example:
-	 * 				 _target
-	 * 				|
-	 * 				|
-	 * 			   Piece
+	 *               _target
+	 *              |
+	 *              |
+	 *            Piece
 	 * 
 	 * @param row
 	 * @param column
@@ -103,10 +103,10 @@ public class Knight extends GenericPiece{
 	/**
 	 * Validate if values are the same, to abstract when they are in the same L.
 	 * Example:
-	 * 		 target_
-	 * 				|
-	 * 				|
-	 * 			   Piece
+	 *       target_
+	 *              |
+	 *              |
+	 *            Piece
 	 * 
 	 * @param row
 	 * @param column
@@ -124,9 +124,9 @@ public class Knight extends GenericPiece{
 	/**
 	 * Validate if values are the same, to abstract when they are in the same L.
 	 * Example:
-	 * 		      Piece
-	 * 				|
-	 * 				|_target 			    
+	 *            Piece
+	 *              |
+	 *              |_target 			    
 	 * 
 	 * @param row
 	 * @param column
@@ -144,9 +144,9 @@ public class Knight extends GenericPiece{
 	/**
 	 * Validate if values are the same, to abstract when they are in the same L.
 	 * Example:
-	 * 		      Piece
-	 * 				|
-	 * 				|_target 			    
+	 *            Piece
+	 *              |
+	 *              |_target 			    
 	 * 
 	 * @param row
 	 * @param column
@@ -164,8 +164,8 @@ public class Knight extends GenericPiece{
 	/**
 	 * Validate if values are the same, to abstract when they are in the same L.
 	 * Example:
-	 * 		     target
-	 * 				|__ __Piece	    
+	 *            target
+	 *               |__ __Piece	    
 	 * 
 	 * @param row
 	 * @param column
@@ -183,9 +183,9 @@ public class Knight extends GenericPiece{
 	/**
 	 * Validate if values are the same, to abstract when they are in the same L.
 	 * Example:
-	 * 		         __ __Piece
-	 * 				|
-	 * 	    	  target
+	 *               __ __Piece
+	 *              |
+	 *            target
 	 * 
 	 * @param row
 	 * @param column
@@ -204,8 +204,8 @@ public class Knight extends GenericPiece{
 	 * Validate if values are the same, to abstract when they are in the same L.
 	 * Example:
 	 * 		         
-	 * 						target
-	 * 	    	  Piece__ __|
+	 *                    target
+	 *             Piece__ __|
 	 * 
 	 * @param row
 	 * @param column
@@ -224,9 +224,9 @@ public class Knight extends GenericPiece{
 	 * Validate if values are the same, to abstract when they are in the same L.
 	 * Example:
 	 * 		         
-	 * 				Piece__ __		
-	 * 	    	  			  |
-	 * 						target
+	 *              Piece__ __		
+	 *                        |
+	 *                      target
 	 * 
 	 * @param row
 	 * @param column
