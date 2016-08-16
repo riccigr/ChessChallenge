@@ -1,5 +1,6 @@
 package resources.chessboard;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -19,6 +20,7 @@ public class BoardManipulator {
 	
 	public static Set<HashMap<Integer, Square>> allConfiguration = new HashSet<>();
 	public static Set<HashMap<Integer, Character>> config = new HashSet<>();
+	public static List<String> hashFinal = new ArrayList<>();
 	private int totalOfConfiguration = 0;
 	
 	/**
@@ -39,6 +41,7 @@ public class BoardManipulator {
 				for (int nextPosition = 1; nextPosition <= totalOfSquares; nextPosition++) {					
 					checkCombination(new LinkedList<GenericPiece>(linkedCombination), nextPiece, nextPosition, board,	new Board(board));
 				}
+				break;
 		}
 		
 		long endTime = System.currentTimeMillis();
@@ -58,8 +61,16 @@ public class BoardManipulator {
 	 */
 	public void checkCombination(LinkedList<GenericPiece> piecesRemaining, GenericPiece targetPiece, int offset, Board currentBoard,
 			Board boardWithEnabledSquares) {
+		//System.out.println("------------------------------------------------" );
+		//System.out.println("Vez da peca: "  + targetPiece );
+		//System.out.println("Próxima casa disponivel: "  + offset );
 		
-		Board disabledSquaresBoard = new Board(currentBoard);
+		if(piecesRemaining.size() == (currentBoard.piecesInGame.size() -1 )){
+			//System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+			currentBoard.finalLayout = new HashMap<Integer, Square>();
+		}
+		
+		Board disabledSquaresBoard = new Board(boardWithEnabledSquares);
 		if(disabledSquaresBoard.canSetPiece(offset, targetPiece)){
 			currentBoard.setPiece(offset, targetPiece);
 		}else{
@@ -68,16 +79,19 @@ public class BoardManipulator {
 		
 		while(piecesRemaining.size() > 0){
 			GenericPiece nextPiece = piecesRemaining.pollFirst();
-			for (Integer nextEnabledSquare : disabledSquaresBoard.currentLayout.keySet()) {
+			for (Integer nextEnabledSquare : disabledSquaresBoard.disabledLayout.keySet()) {				
+		//		//System.out.println("Próxima casa disponivel: "  + nextEnabledSquare );
 				checkCombination(new LinkedList<>(piecesRemaining), nextPiece, nextEnabledSquare, new Board(currentBoard), disabledSquaresBoard);
 				currentBoard.currentLayout.get(nextEnabledSquare).setStatus(Square.EMPTY);
 			}
 			currentBoard.currentLayout.get(offset).setStatus(Square.EMPTY);
 		}
 		
-		addToConfigurationsFound(currentBoard);
+		
 		
 		if (piecesRemaining.size() == 0) {
+			if(currentBoard.finalLayout.size() == currentBoard.piecesInGame.size())
+				addToConfigurationsFound(currentBoard);
 			currentBoard.currentLayout.get(offset).setStatus(Square.EMPTY);
 			return;
 		}
@@ -89,31 +103,23 @@ public class BoardManipulator {
 	 * 
 	 * @param board
 	 */
-	private void addToConfigurationsFound(Board board) {		
+	private void addToConfigurationsFound(Board board) {	
+		String candidato = "";
 		for (Integer piecePositioned : board.currentLayout.keySet()) {
 			Square square = board.currentLayout.get(piecePositioned);
-			boolean isOriginal = true;
 			if(square.hasPiece()){
 				HashMap<Integer, Character> tmp = new HashMap<>();
 				tmp.put(piecePositioned, square.getPiece().getAbbreviation());
-				if(config.size() == 0){
-					config.add(tmp);
-					allConfiguration.add(board.currentLayout);
-				}
-				for(HashMap<Integer, Character> possibility : config){
-					if(!possibility.equals(tmp)){
-						isOriginal = false;
-					}
-				}
-				if(isOriginal){
-					config.add(tmp);
-					allConfiguration.add(board.currentLayout);
-					totalOfConfiguration++;
-					showConfigurations(board);
-				}
+				candidato += tmp.hashCode();				
 			}
-		}
+		}		
 		
+		if(!hashFinal.contains(candidato)){
+			hashFinal.add(candidato);
+			allConfiguration.add(board.currentLayout);
+			totalOfConfiguration++;
+			//showConfigurations(board);
+		}		
 	}
 	
 	/**
