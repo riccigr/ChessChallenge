@@ -20,6 +20,8 @@ public class Board {
 	private int columns;
 	private int dimension;
 	public HashMap<Integer, Square> currentLayout;
+	public HashMap<Integer, Square> disabledLayout;
+	public HashMap<Integer, Square> finalLayout;
 	public GenericPiece[][] piecesLayout;
 	public List<GenericPiece> piecesInGame = new ArrayList<>();
 	public HashMap<Integer, Square> position = new HashMap<>();
@@ -40,6 +42,8 @@ public class Board {
 		this.dimension = numberOfRows * numberOfColumns;
 		this.piecesInGame = piecesToBoard;
 		currentLayout = new HashMap<Integer, Square>();
+		disabledLayout = new HashMap<Integer, Square>();
+		finalLayout = new HashMap<Integer, Square>();
 		prepareBoard();
 	}
 
@@ -55,6 +59,8 @@ public class Board {
 		this.dimension = another.dimension;
 		this.piecesInGame = another.piecesInGame;
 		this.currentLayout = (HashMap<Integer, Square>) another.currentLayout.clone();
+		this.disabledLayout = (HashMap<Integer, Square>) another.disabledLayout.clone();
+		this.finalLayout = (HashMap<Integer, Square>) another.finalLayout.clone();
 	}
 
 	/**
@@ -64,6 +70,7 @@ public class Board {
 	private void prepareBoard() {
 		for (int i = 1; i <= dimension; i++) {
 			currentLayout.put(i, new Square(i, this));
+			disabledLayout.put(i, new Square(i, this));
 		}
 	}
 
@@ -77,13 +84,24 @@ public class Board {
 	 */
 	public boolean canSetPiece(int offset, GenericPiece piece) {
 		List<Integer> disabledSquaresOffset = piece.disableSquare(offset, this);
+		//System.out.println("Essa peca nao permite: " +disabledSquaresOffset.toString());
 		for (int disabledOffset : disabledSquaresOffset) {
-			if(this.currentLayout.get(disabledOffset).hasPiece()){
-				return false;
+			if(this.currentLayout.get(disabledOffset) != null){
+				if(this.currentLayout.get(disabledOffset).hasPiece()){
+					return false;
+				}
 			}
+			
 			int positionToRemove = disabledOffset;
-			this.currentLayout.remove(positionToRemove);
+			this.disabledLayout.remove(positionToRemove);
 		}
+		
+		//System.out.println("Casas disponíveis: ");
+		for(Integer i : this.disabledLayout.keySet()){
+			//System.out.print(this.currentLayout.get(i).getOffset() + " , ");
+		}
+		//System.out.println("");
+		
 		return true;
 	}
 
@@ -102,6 +120,8 @@ public class Board {
 		position.setStatus(Square.FILLED);
 		position.setOffset(offset);
 		currentLayout.put(offset, position);
+		finalLayout.put(offset, position);
+		//System.out.println("Setou a peca: " + position.getPiece() + " na casa " + offset);
 	}
 
 	public int getTotalRows() {
