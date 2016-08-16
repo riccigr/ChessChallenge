@@ -16,7 +16,7 @@ public class Queen extends GenericPiece {
 	 * @see char
 	 */
 	public char getAbbreviation() {
-		return 'B';
+		return 'Q';
 	}
 
     /**
