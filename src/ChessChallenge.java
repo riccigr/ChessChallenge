@@ -18,12 +18,13 @@ public class ChessChallenge {
 	public static void main(String[] args) {
 		
 		List<GenericPiece> piecesToGame = new ArrayList<>();
-//		piecesToGame.add(new King());
-		piecesToGame.add(new Knight());
-		piecesToGame.add(new Knight());
 		piecesToGame.add(new Rook());
-//		piecesToGame.add(new King());		
-		Board chessBoard = new Board(3,3, piecesToGame);
+		piecesToGame.add(new Rook());
+		piecesToGame.add(new Knight());			
+		piecesToGame.add(new Knight());		
+		piecesToGame.add(new Knight());	
+		piecesToGame.add(new Knight());	
+		Board chessBoard = new Board(4, 4, piecesToGame);
 		
 		BoardManipulator boardManipulator = new BoardManipulator();
 		boardManipulator.findAllUniqueConfigurations(chessBoard);

@@ -7,7 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import resources.helper.PieceHelper;
 import resources.piece.GenericPiece;
 
 /**
@@ -18,8 +17,7 @@ import resources.piece.GenericPiece;
  */
 public class BoardManipulator {
 	
-	public static Set<HashMap<Integer, Square>> allConfiguration = new HashSet<>();
-	public static Set<HashMap<Integer, Character>> config = new HashSet<>();
+	public static Set<HashMap<Integer, Square>> allConfigurationFound = new HashSet<>();
 	public static List<String> hashFinal = new ArrayList<>();
 	private int totalOfConfiguration = 0;
 	
@@ -33,18 +31,15 @@ public class BoardManipulator {
 		
 		long startTime = System.currentTimeMillis();
 		int totalOfSquares = board.getDimension();
-		Set<List<GenericPiece>> splitedSequence = new PieceHelper().getAllPiecesSequence(board.piecesInGame);
 
-		for (List<GenericPiece> combination : splitedSequence) {
-			LinkedList<GenericPiece> linkedCombination = new LinkedList<>(combination);
-				GenericPiece nextPiece = linkedCombination.pollFirst();
-				for (int nextPosition = 1; nextPosition <= totalOfSquares; nextPosition++) {					
-					checkCombination(new LinkedList<GenericPiece>(linkedCombination), nextPiece, nextPosition, board,	new Board(board));
-				}
-				break;
+		LinkedList<GenericPiece> linkedCombination = new LinkedList<>(board.piecesInGame);
+		GenericPiece nextPiece = linkedCombination.pollFirst();
+		for (int nextPosition = 1; nextPosition <= totalOfSquares; nextPosition++) {					
+			checkCombination(new LinkedList<GenericPiece>(linkedCombination), nextPiece, nextPosition, board,	new Board(board));
 		}
 		
 		long endTime = System.currentTimeMillis();
+		
 		System.out.println("Time spent " + (endTime - startTime) + "ms");
 		System.out.println("Total of Configuration Found : " + totalOfConfiguration);	
 	}
@@ -61,12 +56,8 @@ public class BoardManipulator {
 	 */
 	public void checkCombination(LinkedList<GenericPiece> piecesRemaining, GenericPiece targetPiece, int offset, Board currentBoard,
 			Board boardWithEnabledSquares) {
-		//System.out.println("------------------------------------------------" );
-		//System.out.println("Vez da peca: "  + targetPiece );
-		//System.out.println("Próxima casa disponivel: "  + offset );
 		
 		if(piecesRemaining.size() == (currentBoard.piecesInGame.size() -1 )){
-			//System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 			currentBoard.finalLayout = new HashMap<Integer, Square>();
 		}
 		
@@ -77,25 +68,47 @@ public class BoardManipulator {
 			return;
 		}
 		
-		while(piecesRemaining.size() > 0){
+		while(hasPiecesRemaining(piecesRemaining)){
 			GenericPiece nextPiece = piecesRemaining.pollFirst();
-			for (Integer nextEnabledSquare : disabledSquaresBoard.disabledLayout.keySet()) {				
-		//		//System.out.println("Próxima casa disponivel: "  + nextEnabledSquare );
+			for (Integer nextEnabledSquare : disabledSquaresBoard.disabledLayout.keySet()) {
 				checkCombination(new LinkedList<>(piecesRemaining), nextPiece, nextEnabledSquare, new Board(currentBoard), disabledSquaresBoard);
 				currentBoard.currentLayout.get(nextEnabledSquare).setStatus(Square.EMPTY);
 			}
 			currentBoard.currentLayout.get(offset).setStatus(Square.EMPTY);
-		}
+		}			
 		
-		
-		
-		if (piecesRemaining.size() == 0) {
-			if(currentBoard.finalLayout.size() == currentBoard.piecesInGame.size())
-				addToConfigurationsFound(currentBoard);
-			currentBoard.currentLayout.get(offset).setStatus(Square.EMPTY);
-			return;
-		}
+		if(canAddToConfigurationsFound(currentBoard)){
+			addToConfigurationsFound(currentBoard);
+		}				
+		currentBoard.currentLayout.get(offset).setStatus(Square.EMPTY);			
 
+		return;
+	}
+	
+	/**
+	 * Validate if a LinkedList of Pieces has some 
+	 * 
+	 * @param piecesRemaining
+	 * @return boolean
+	 */
+	private boolean hasPiecesRemaining(LinkedList<GenericPiece> piecesRemaining){
+		if(piecesRemaining.size() > 0){
+			return true;
+		}
+		return false;			
+	}
+	
+	/**
+	 * Validate if the final layout has the same number of position as are Pieces in game
+	 * 
+	 * @param board
+	 * @return boolean
+	 */
+	private boolean canAddToConfigurationsFound(Board board){
+		if(board.finalLayout.size() == board.piecesInGame.size()){
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -104,22 +117,36 @@ public class BoardManipulator {
 	 * @param board
 	 */
 	private void addToConfigurationsFound(Board board) {	
-		String candidato = "";
+		String candidate = "";
 		for (Integer piecePositioned : board.currentLayout.keySet()) {
 			Square square = board.currentLayout.get(piecePositioned);
 			if(square.hasPiece()){
-				HashMap<Integer, Character> tmp = new HashMap<>();
-				tmp.put(piecePositioned, square.getPiece().getAbbreviation());
-				candidato += tmp.hashCode();				
+				HashMap<Integer, Character> tempPiece = new HashMap<>();
+				tempPiece.put(piecePositioned, square.getPiece().getAbbreviation());
+				candidate += tempPiece.hashCode();				
 			}
 		}		
 		
-		if(!hashFinal.contains(candidato)){
-			hashFinal.add(candidato);
-			allConfiguration.add(board.currentLayout);
+		if(isOriginalString(hashFinal,candidate)){
+			hashFinal.add(candidate);
+			allConfigurationFound.add(board.currentLayout);
 			totalOfConfiguration++;
-			//showConfigurations(board);
+			showConfigurations(board);
 		}		
+	}
+	
+	/**
+	 * Validate if a new item exists inside a list of them.
+	 * 
+	 * @param bunchOfItems List<String> to checkInsite
+	 * @param item String to be validated
+	 * @return boolean
+	 */
+	private boolean isOriginalString(List<String> bunchOfItems, String item){
+		if(!bunchOfItems.contains(item)){
+			return true;
+		}
+		return false;
 	}
 	
 	/**
@@ -130,7 +157,7 @@ public class BoardManipulator {
 		int counter = 1;
 		int totalOfColumns = board.getTotalColumns();
 		
-		for (HashMap<Integer, Square> possibility : allConfiguration) {
+		for (HashMap<Integer, Square> possibility : allConfigurationFound) {
 			StringBuilder sb = new StringBuilder();
 			for (Integer piecePositioned : possibility.keySet()) {
 				Square n = possibility.get(piecePositioned);
@@ -150,17 +177,4 @@ public class BoardManipulator {
 			System.out.println();
 		}	
 	}
-	
-	/**
-	 * Return integer with total of configurations.
-	 * 
-	 * @return
-	 */
-	public int getTotalOfConfigurationsFound(){
-		return this.totalOfConfiguration;
-	}
-
-	
-	
-	
 }

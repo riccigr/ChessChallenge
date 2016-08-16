@@ -41,9 +41,10 @@ public class Board {
 		this.columns = numberOfColumns;
 		this.dimension = numberOfRows * numberOfColumns;
 		this.piecesInGame = piecesToBoard;
-		currentLayout = new HashMap<Integer, Square>();
-		disabledLayout = new HashMap<Integer, Square>();
-		finalLayout = new HashMap<Integer, Square>();
+		this.currentLayout = new HashMap<Integer, Square>();
+		this.disabledLayout = new HashMap<Integer, Square>();
+		this.finalLayout = new HashMap<Integer, Square>();
+		
 		prepareBoard();
 	}
 
@@ -84,24 +85,15 @@ public class Board {
 	 */
 	public boolean canSetPiece(int offset, GenericPiece piece) {
 		List<Integer> disabledSquaresOffset = piece.disableSquare(offset, this);
-		//System.out.println("Essa peca nao permite: " +disabledSquaresOffset.toString());
 		for (int disabledOffset : disabledSquaresOffset) {
 			if(this.currentLayout.get(disabledOffset) != null){
 				if(this.currentLayout.get(disabledOffset).hasPiece()){
 					return false;
 				}
-			}
-			
+			}			
 			int positionToRemove = disabledOffset;
 			this.disabledLayout.remove(positionToRemove);
-		}
-		
-		//System.out.println("Casas disponíveis: ");
-		for(Integer i : this.disabledLayout.keySet()){
-			//System.out.print(this.currentLayout.get(i).getOffset() + " , ");
-		}
-		//System.out.println("");
-		
+		}		
 		return true;
 	}
 
@@ -121,7 +113,6 @@ public class Board {
 		position.setOffset(offset);
 		currentLayout.put(offset, position);
 		finalLayout.put(offset, position);
-		//System.out.println("Setou a peca: " + position.getPiece() + " na casa " + offset);
 	}
 
 	public int getTotalRows() {
