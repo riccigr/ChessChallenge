@@ -76,7 +76,7 @@ public class Board {
 		}
 	}
 	
-	public int getEnabledOffset(int initialOffset, GenericPiece targetPiece){
+	public int trySetPieceInEnableOffset(int initialOffset, GenericPiece targetPiece){
 		for(int offset = initialOffset; offset < dimension; offset++){
 			int row = offset / rows;
 			int column = offset % rows;
@@ -160,6 +160,19 @@ public class Board {
 	 */
 	public int getDimension() {
 		return this.columns * this.rows;
+	}
+	
+	public String toString(){
+		String candidate = "";
+		for (Integer piecePositioned : currentLayout.keySet()) {
+			Square square = currentLayout.get(piecePositioned);
+			if(square.hasPiece()){
+				HashMap<Integer, Character> tempPiece = new HashMap<>();
+				tempPiece.put(piecePositioned, square.getPiece().getAbbreviation());
+				candidate += piecePositioned.toString() + String.valueOf((square.getPiece().getAbbreviation()));				
+			}
+		}	
+		return candidate;
 	}
 
 
