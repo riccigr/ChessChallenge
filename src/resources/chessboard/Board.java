@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import resources.helper.SquareHelper;
 import resources.piece.GenericPiece;
 
 /**
@@ -69,10 +70,23 @@ public class Board {
 	 * 
 	 */
 	private void prepareBoard() {
-		for (int i = 1; i <= dimension; i++) {
+		for (int i = 0; i < dimension; i++) {
 			currentLayout.put(i, new Square(i, this));
 			disabledLayout.put(i, new Square(i, this));
 		}
+	}
+	
+	public int getEnabledOffset(int initialOffset, GenericPiece targetPiece){
+		for(int offset = initialOffset; offset < dimension; offset++){
+			int row = offset / rows;
+			int column = offset % rows;
+			if(canSetPiece(targetPiece, row, column)){
+				setPiece(offset, targetPiece);
+				return offset;
+			}
+		}
+		
+		return -1;
 	}
 
 	/**
@@ -83,18 +97,33 @@ public class Board {
 	 * @param piece Piece to be included
 	 * @return
 	 */
-	public boolean canSetPiece(int offset, GenericPiece piece) {
-		List<Integer> disabledSquaresOffset = piece.disableSquare(offset, this);
-		for (int disabledOffset : disabledSquaresOffset) {
-			if(this.currentLayout.get(disabledOffset) != null){
-				if(this.currentLayout.get(disabledOffset).hasPiece()){
-					return false;
-				}
-			}			
-			int positionToRemove = disabledOffset;
-			this.disabledLayout.remove(positionToRemove);
-		}		
+	public boolean canSetPiece(GenericPiece piece, int row, int column) {
+		piece.setColumn(column);
+		piece.setRow(row);
+		for(Square square : finalLayout.values()) {
+			GenericPiece myPiece = square.getPiece();
+			if(myPiece.isInAttackArea(row, column)){
+				return false;
+			}
+			if(piece.isInAttackArea(myPiece.getRow(), myPiece.getColumn())){
+				return false;
+			}
+		}
 		return true;
+		
+//		piece.setColumn(offset % rows);
+//		piece.setRow(offset / rows);
+//		List<Integer> disabledSquaresOffset = piece.disableSquare(offset, this);
+//		for (int disabledOffset : disabledSquaresOffset) {
+//			if(this.currentLayout.get(disabledOffset) != null){
+//				if(this.currentLayout.get(disabledOffset).hasPiece()){
+//					return false;
+//				}
+//			}			
+//			int positionToRemove = disabledOffset;
+//			this.disabledLayout.remove(positionToRemove);
+//		}		
+//		return true;
 	}
 
 	/**

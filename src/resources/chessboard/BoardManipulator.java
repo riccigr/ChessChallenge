@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import resources.piece.GenericPiece;
@@ -34,8 +35,8 @@ public class BoardManipulator {
 
 		LinkedList<GenericPiece> linkedCombination = new LinkedList<>(board.piecesInGame);
 		GenericPiece nextPiece = linkedCombination.pollFirst();
-		for (int nextPosition = 1; nextPosition <= totalOfSquares; nextPosition++) {					
-			checkCombination(new LinkedList<GenericPiece>(linkedCombination), nextPiece, nextPosition, board,	new Board(board));
+		for (int nextPosition = 0; nextPosition < totalOfSquares; nextPosition++) {					
+			checkCombination(new LinkedList<GenericPiece>(linkedCombination), nextPiece, nextPosition, board);
 		}
 		
 		long endTime = System.currentTimeMillis();
@@ -50,53 +51,44 @@ public class BoardManipulator {
 	 * 
 	 * @param piecesRemaining Pieces to be checked in recursive function.
 	 * @param targetPiece Current piece to be tested.
-	 * @param offset Current position enabled to be tested.
+	 * @param initialOffset Current position enabled to be tested.
 	 * @param currentBoard Official layout with a solution.
 	 * @param boardWithEnabledSquares Board without squares filled or in attack areas.
 	 */
-	public void checkCombination(LinkedList<GenericPiece> piecesRemaining, GenericPiece targetPiece, int offset, Board currentBoard,
-			Board boardWithEnabledSquares) {
+	public void checkCombination(LinkedList<GenericPiece> piecesRemaining, GenericPiece targetPiece, int initialOffset, Board currentBoard) {
+		
+		int targetOffset = -1;
 		
 		if(piecesRemaining.size() == (currentBoard.piecesInGame.size() -1 )){
 			currentBoard.finalLayout = new HashMap<Integer, Square>();
 		}
 		
-		Board disabledSquaresBoard = new Board(boardWithEnabledSquares);
-		if(disabledSquaresBoard.canSetPiece(offset, targetPiece)){
-			currentBoard.setPiece(offset, targetPiece);
-		}else{
+		targetOffset = currentBoard.getEnabledOffset(initialOffset, targetPiece);
+		
+		if(targetOffset == -1){
 			return;
 		}
 		
-		while(hasPiecesRemaining(piecesRemaining)){
+		while(!piecesRemaining.isEmpty()){
 			GenericPiece nextPiece = piecesRemaining.pollFirst();
-			for (Integer nextEnabledSquare : disabledSquaresBoard.disabledLayout.keySet()) {
-				checkCombination(new LinkedList<>(piecesRemaining), nextPiece, nextEnabledSquare, new Board(currentBoard), disabledSquaresBoard);
-				currentBoard.currentLayout.get(nextEnabledSquare).setStatus(Square.EMPTY);
+			for (int nextOffset = targetOffset+1; nextOffset < currentBoard.getDimension(); nextOffset++) {
+				checkCombination(new LinkedList<>(piecesRemaining), nextPiece, nextOffset, new Board(currentBoard));
+				currentBoard.currentLayout.get(nextOffset).setStatus(Square.EMPTY);
 			}
-			currentBoard.currentLayout.get(offset).setStatus(Square.EMPTY);
+			currentBoard.currentLayout.get(targetOffset).setStatus(Square.EMPTY);
 		}			
 		
 		if(canAddToConfigurationsFound(currentBoard)){
 			addToConfigurationsFound(currentBoard);
 		}				
-		currentBoard.currentLayout.get(offset).setStatus(Square.EMPTY);			
+		currentBoard.currentLayout.get(targetOffset).setStatus(Square.EMPTY);			
 
 		return;
 	}
 	
-	/**
-	 * Validate if a LinkedList of Pieces has some 
-	 * 
-	 * @param piecesRemaining
-	 * @return boolean
-	 */
-	private boolean hasPiecesRemaining(LinkedList<GenericPiece> piecesRemaining){
-		if(piecesRemaining.size() > 0){
-			return true;
-		}
-		return false;			
-	}
+	
+	
+
 	
 	/**
 	 * Validate if the final layout has the same number of position as are Pieces in game
@@ -117,18 +109,18 @@ public class BoardManipulator {
 	 * @param board
 	 */
 	private void addToConfigurationsFound(Board board) {	
-		String candidate = "";
+		StringBuilder candidate = new StringBuilder();
 		for (Integer piecePositioned : board.currentLayout.keySet()) {
 			Square square = board.currentLayout.get(piecePositioned);
 			if(square.hasPiece()){
 				HashMap<Integer, Character> tempPiece = new HashMap<>();
 				tempPiece.put(piecePositioned, square.getPiece().getAbbreviation());
-				candidate += tempPiece.hashCode();				
+				candidate.append(tempPiece.toString());				
 			}
 		}		
 		
-		if(isOriginalString(hashFinal,candidate)){
-			hashFinal.add(candidate);
+		if(isOriginalString(hashFinal,candidate.toString())){
+			hashFinal.add(candidate.toString());
 			allConfigurationFound.add(board.currentLayout);
 			totalOfConfiguration++;
 			showConfigurations(board);
