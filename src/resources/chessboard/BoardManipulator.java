@@ -19,7 +19,7 @@ import resources.piece.GenericPiece;
 public class BoardManipulator {
 	
 	public static Set<HashMap<Integer, Square>> allConfigurationFound = new HashSet<>();
-	public static List<String> hashFinal = new ArrayList<>();
+	public static List<String> uniqueConfig = new ArrayList<>();
 	private int totalOfConfiguration = 0;
 	
 	/**
@@ -59,29 +59,32 @@ public class BoardManipulator {
 		
 		int targetOffset = -1;
 		
+		System.out.println(targetPiece.getAbbreviation() + " e a peca " );
+		
 		if(piecesRemaining.size() == (currentBoard.piecesInGame.size() -1 )){
 			currentBoard.finalLayout = new HashMap<Integer, Square>();
 		}
 		
-		targetOffset = currentBoard.getEnabledOffset(initialOffset, targetPiece);
+		targetOffset = currentBoard.trySetPieceInEnableOffset(initialOffset, targetPiece);
 		
 		if(targetOffset == -1){
+			System.out.println("Fail");
 			return;
+		}else{
+			System.out.println("Setou na casa " + targetOffset);
 		}
 		
 		while(!piecesRemaining.isEmpty()){
-			GenericPiece nextPiece = piecesRemaining.pollFirst();
-			for (int nextOffset = targetOffset+1; nextOffset < currentBoard.getDimension(); nextOffset++) {
-				checkCombination(new LinkedList<>(piecesRemaining), nextPiece, nextOffset, new Board(currentBoard));
-				currentBoard.currentLayout.get(nextOffset).setStatus(Square.EMPTY);
-			}
-			currentBoard.currentLayout.get(targetOffset).setStatus(Square.EMPTY);
+			GenericPiece nextPiece = piecesRemaining.pollFirst();				
+				checkCombination(new LinkedList<>(piecesRemaining), nextPiece, targetOffset+1, new Board(currentBoard));
+//				currentBoard.currentLayout.get(nextOffset).setStatus(Square.EMPTY);
+//			currentBoard.currentLayout.get(targetOffset).setStatus(Square.EMPTY);
 		}			
 		
 		if(canAddToConfigurationsFound(currentBoard)){
 			addToConfigurationsFound(currentBoard);
 		}				
-		currentBoard.currentLayout.get(targetOffset).setStatus(Square.EMPTY);			
+//		currentBoard.currentLayout.get(targetOffset).setStatus(Square.EMPTY);			
 
 		return;
 	}
@@ -109,18 +112,10 @@ public class BoardManipulator {
 	 * @param board
 	 */
 	private void addToConfigurationsFound(Board board) {	
-		StringBuilder candidate = new StringBuilder();
-		for (Integer piecePositioned : board.currentLayout.keySet()) {
-			Square square = board.currentLayout.get(piecePositioned);
-			if(square.hasPiece()){
-				HashMap<Integer, Character> tempPiece = new HashMap<>();
-				tempPiece.put(piecePositioned, square.getPiece().getAbbreviation());
-				candidate.append(tempPiece.toString());				
-			}
-		}		
+		String configCandidate = board.toString();
 		
-		if(isOriginalString(hashFinal,candidate.toString())){
-			hashFinal.add(candidate.toString());
+		if(isOriginalString(uniqueConfig,configCandidate)){
+			uniqueConfig.add(configCandidate);
 			allConfigurationFound.add(board.currentLayout);
 			totalOfConfiguration++;
 			showConfigurations(board);
