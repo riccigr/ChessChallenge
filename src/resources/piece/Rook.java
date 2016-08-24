@@ -40,19 +40,41 @@ public class Rook extends GenericPiece{
 		int currentColumn =  squareHelper.getColumnBasedOnOffset(offset, totalOfRows, totalOfColumns);
 		List<Integer> disabledSquareOffset = new ArrayList<>();
 		
-		for(int row=1; row <= totalOfRows; row++){
-			for(int column=1; column <= totalOfColumns; column++){
-				if(isInVertical(column, currentColumn)){
-					disabledSquareOffset.add(squareHelper.calculateOffset(row, column, totalOfColumns));
-					continue;
-				}
-				if(isInHorizontal(row, currentRow)){
-					disabledSquareOffset.add(squareHelper.calculateOffset(row, column, totalOfColumns));
-					continue;
-				}
-			}
-		}		
+//		for(int row=1; row <= totalOfRows; row++){
+//			for(int column=1; column <= totalOfColumns; column++){
+//				if(isInVertical(column, currentColumn)){
+//					disabledSquareOffset.add(squareHelper.calculateOffset(row, column, totalOfColumns));
+//					continue;
+//				}
+//				if(isInHorizontal(row, currentRow)){
+//					disabledSquareOffset.add(squareHelper.calculateOffset(row, column, totalOfColumns));
+//					continue;
+//				}
+//			}
+//		}		
+		
+		int t = totalOfRows * totalOfColumns;
+		
+		disabledSquareOffset.add(offset);
+		
+		for(int i = 0; i< t; i++){
+			int column = i % totalOfRows;
+			int row = i / totalOfRows;
+			if(getRow() == row || getColumn() == column)
+				disabledSquareOffset.add(row * totalOfRows + column);
+		}
+		
 		return disabledSquareOffset;		
+	}
+	
+	@Override
+	public boolean isInAttackArea(int row, int column) {
+
+			if(getRow() == row || getColumn() == column){
+				return true;
+		}
+		
+		return false;	
 	}
 	
 	/**

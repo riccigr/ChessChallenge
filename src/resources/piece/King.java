@@ -6,78 +6,118 @@ import java.util.List;
 import resources.chessboard.Board;
 import resources.helper.SquareHelper;
 
-public class King extends GenericPiece{
-	
+public class King extends GenericPiece {
+
 	/**
 	 * Return a identification for this piece
+	 * 
 	 * @see char
 	 */
-	public char getAbbreviation(){
+	public char getAbbreviation() {
 		return 'K';
 	}
+	
+	
+	@Override
+	public boolean isInAttackArea(int row, int column) {
+		
+		if (Math.abs(getRow() - row) == 1 && Math.abs(getColumn() - column) == 1) {
+			return true;
+		} 
+		if ((getRow() == row && Math.abs(getColumn() - column) == 1) || (getColumn() == column && Math.abs(getRow() - row) == 1)) {
+			return true;
+		}
+		
+		return false;	
+	}
 
-    /**
-     * Return a list with all position which cannot be used to place a piece.
-     * @param offset value to use as a index of a 2dimension matrix(board).
-     * @param board current board layout used to get its dimensions.
-     * @see List<>
-     * @see ArrayList<>
-     */
+	/**
+	 * Return a list with all position which cannot be used to place a piece.
+	 * 
+	 * @param offset
+	 *            value to use as a index of a 2dimension matrix(board).
+	 * @param board
+	 *            current board layout used to get its dimensions.
+	 * @see List<>
+	 * @see ArrayList<>
+	 */
 	@Override
 	public List<Integer> disableSquare(int offset, Board board) {
 		SquareHelper squareHelper = new SquareHelper();
 		int totalOfRows = board.getTotalRows();
 		int totalOfColumns = board.getTotalColumns();
-		int currentRow =  squareHelper.getRowBasedOnOffset(offset, totalOfRows);
-		int currentColumn =  squareHelper.getColumnBasedOnOffset(offset, totalOfRows, totalOfColumns);
+		int currentRow = squareHelper.getRowBasedOnOffset(offset, totalOfRows);
+		int currentColumn = squareHelper.getColumnBasedOnOffset(offset, totalOfRows, totalOfColumns);
 		List<Integer> disabledSquareOffset = new ArrayList<>();
-		
-		for(int row=1; row <= totalOfRows; row++){
-			for(int column=1; column <= totalOfColumns; column++){
-				if(isUpPosition(row, column, currentRow, currentColumn))
-				{
-					disabledSquareOffset.add(squareHelper.calculateOffset(row, column, totalOfColumns));
-				}
-				else if(isDownPosition(row, column, currentRow, currentColumn))
-				{
-					disabledSquareOffset.add(squareHelper.calculateOffset(row, column, totalOfColumns));
-				}
-				else if(isLeftPosition(row, column, currentRow, currentColumn))
-				{
-					disabledSquareOffset.add(squareHelper.calculateOffset(row, column, totalOfColumns));
-				}
-				else if(isRightPosition(row, column, currentRow, currentColumn))
-				{
-					disabledSquareOffset.add(squareHelper.calculateOffset(row, column, totalOfColumns));
-				}
-				else if(isUpLeftPosition(row, column, currentRow, currentColumn))
-				{
-					disabledSquareOffset.add(squareHelper.calculateOffset(row, column, totalOfColumns));
-				}
-				else if(isUpRightPosition(row, column, currentRow, currentColumn))
-				{
-					disabledSquareOffset.add(squareHelper.calculateOffset(row, column, totalOfColumns));
-				}
-				else if(isDownLeftPosition(row, column, currentRow, currentColumn))
-				{
-					disabledSquareOffset.add(squareHelper.calculateOffset(row, column, totalOfColumns));
-				}
-				else if(isDownRightPosition(row, column, currentRow, currentColumn))
-				{
-					disabledSquareOffset.add(squareHelper.calculateOffset(row, column, totalOfColumns));
-				}else if(isItOwnPosition(row, column, currentRow, currentColumn)){
-					disabledSquareOffset.add(squareHelper.calculateOffset(row, column, totalOfColumns));
-				}
+
+		// for(int row=1; row <= totalOfRows; row++){
+		// for(int column=1; column <= totalOfColumns; column++){
+		// if(isUpPosition(row, column, currentRow, currentColumn))
+		// {
+		// disabledSquareOffset.add(squareHelper.calculateOffset(row, column,
+		// totalOfColumns));
+		// }
+		// else if(isDownPosition(row, column, currentRow, currentColumn))
+		// {
+		// disabledSquareOffset.add(squareHelper.calculateOffset(row, column,
+		// totalOfColumns));
+		// }
+		// else if(isLeftPosition(row, column, currentRow, currentColumn))
+		// {
+		// disabledSquareOffset.add(squareHelper.calculateOffset(row, column,
+		// totalOfColumns));
+		// }
+		// else if(isRightPosition(row, column, currentRow, currentColumn))
+		// {
+		// disabledSquareOffset.add(squareHelper.calculateOffset(row, column,
+		// totalOfColumns));
+		// }
+		// else if(isUpLeftPosition(row, column, currentRow, currentColumn))
+		// {
+		// disabledSquareOffset.add(squareHelper.calculateOffset(row, column,
+		// totalOfColumns));
+		// }
+		// else if(isUpRightPosition(row, column, currentRow, currentColumn))
+		// {
+		// disabledSquareOffset.add(squareHelper.calculateOffset(row, column,
+		// totalOfColumns));
+		// }
+		// else if(isDownLeftPosition(row, column, currentRow, currentColumn))
+		// {
+		// disabledSquareOffset.add(squareHelper.calculateOffset(row, column,
+		// totalOfColumns));
+		// }
+		// else if(isDownRightPosition(row, column, currentRow, currentColumn))
+		// {
+		// disabledSquareOffset.add(squareHelper.calculateOffset(row, column,
+		// totalOfColumns));
+		// }else if(isItOwnPosition(row, column, currentRow, currentColumn)){
+		// disabledSquareOffset.add(squareHelper.calculateOffset(row, column,
+		// totalOfColumns));
+		// }
+		// }
+		// }
+
+		int t = totalOfRows * totalOfColumns;
+		disabledSquareOffset.add(offset);
+		for (int i = 0; i < t; i++) {
+			int column = i % totalOfRows;
+			int row = i / totalOfRows;
+			if (Math.abs(getRow() - row) == 1 && Math.abs(getColumn() - column) == 1) {
+				disabledSquareOffset.add(row * totalOfRows + column);
+			} else if ((getRow() == row && Math.abs(getColumn() - column) == 1)	|| (getColumn() == column && Math.abs(getRow() - row) == 1)) {
+				disabledSquareOffset.add(row * totalOfRows + column);
 			}
 		}
-		
+
 		return disabledSquareOffset;
-		
+
 	}
-	
+
 	/**
-	 * Validate if candidate column and row have the same value from current column and current row.
-	 * Represents the candidate position are the same in terms of coordinates.
+	 * Validate if candidate column and row have the same value from current
+	 * column and current row. Represents the candidate position are the same in
+	 * terms of coordinates.
 	 * 
 	 * @param row
 	 * @param column
@@ -86,14 +126,15 @@ public class King extends GenericPiece{
 	 * @return
 	 */
 	private boolean isItOwnPosition(int row, int column, int currentRow, int currentColumn) {
-		if((row == currentRow) && (column==currentColumn)){
+		if ((row == currentRow) && (column == currentColumn)) {
 			return true;
 		}
 		return false;
 	}
 
 	/**
-	 * Validate if candidate row and column represents a position on Down and Right from current row and Column.
+	 * Validate if candidate row and column represents a position on Down and
+	 * Right from current row and Column.
 	 * 
 	 * @param row
 	 * @param column
@@ -102,14 +143,15 @@ public class King extends GenericPiece{
 	 * @return
 	 */
 	private boolean isDownRightPosition(int row, int column, int currentRow, int currentColumn) {
-		if(((row+1) == currentRow) && ((column+1) ==currentColumn)){
+		if (((row + 1) == currentRow) && ((column + 1) == currentColumn)) {
 			return true;
 		}
 		return false;
 	}
 
 	/**
-	 * Validate if candidate row and column represents a position on Down and Left from current row and Column.
+	 * Validate if candidate row and column represents a position on Down and
+	 * Left from current row and Column.
 	 * 
 	 * @param row
 	 * @param column
@@ -118,14 +160,15 @@ public class King extends GenericPiece{
 	 * @return
 	 */
 	private boolean isDownLeftPosition(int row, int column, int currentRow, int currentColumn) {
-		if(((row+1) == currentRow) && ((column-1) ==currentColumn)){
+		if (((row + 1) == currentRow) && ((column - 1) == currentColumn)) {
 			return true;
 		}
 		return false;
 	}
 
 	/**
-	 * Validate if candidate row and column represents a position on Up and Right from current row and Column.
+	 * Validate if candidate row and column represents a position on Up and
+	 * Right from current row and Column.
 	 * 
 	 * @param row
 	 * @param column
@@ -134,14 +177,15 @@ public class King extends GenericPiece{
 	 * @return
 	 */
 	private boolean isUpRightPosition(int row, int column, int currentRow, int currentColumn) {
-		if(((row-1) == currentRow) && ((column+1) ==currentColumn)){
+		if (((row - 1) == currentRow) && ((column + 1) == currentColumn)) {
 			return true;
 		}
 		return false;
 	}
 
 	/**
-	 * Validate if candidate row and column represents a position on Up and Left from current row and Column.
+	 * Validate if candidate row and column represents a position on Up and Left
+	 * from current row and Column.
 	 * 
 	 * @param row
 	 * @param column
@@ -150,14 +194,15 @@ public class King extends GenericPiece{
 	 * @return
 	 */
 	private boolean isUpLeftPosition(int row, int column, int currentRow, int currentColumn) {
-		if(((row-1) == currentRow) && ((column-1) ==currentColumn)){
+		if (((row - 1) == currentRow) && ((column - 1) == currentColumn)) {
 			return true;
 		}
 		return false;
 	}
 
 	/**
-	 * Validate if candidate row and column represents a position on Right side from current row and Column.
+	 * Validate if candidate row and column represents a position on Right side
+	 * from current row and Column.
 	 * 
 	 * @param row
 	 * @param column
@@ -166,14 +211,15 @@ public class King extends GenericPiece{
 	 * @return
 	 */
 	private boolean isRightPosition(int row, int column, int currentRow, int currentColumn) {
-		if((row == currentRow) && ((column+1) ==currentColumn)){
+		if ((row == currentRow) && ((column + 1) == currentColumn)) {
 			return true;
 		}
 		return false;
 	}
 
 	/**
-	 * Validate if candidate row and column represents a position on Left side from current row and Column.
+	 * Validate if candidate row and column represents a position on Left side
+	 * from current row and Column.
 	 * 
 	 * @param row
 	 * @param column
@@ -182,14 +228,15 @@ public class King extends GenericPiece{
 	 * @return
 	 */
 	private boolean isLeftPosition(int row, int column, int currentRow, int currentColumn) {
-		if((row == currentRow) && ((column-1) ==currentColumn)){
+		if ((row == currentRow) && ((column - 1) == currentColumn)) {
 			return true;
 		}
 		return false;
 	}
 
 	/**
-	 * Validate if candidate row and column represents a position on Down side from current row and Column.
+	 * Validate if candidate row and column represents a position on Down side
+	 * from current row and Column.
 	 * 
 	 * @param row
 	 * @param column
@@ -198,14 +245,15 @@ public class King extends GenericPiece{
 	 * @return
 	 */
 	private boolean isDownPosition(int row, int column, int currentRow, int currentColumn) {
-		if(((row+1) == currentRow) && (column ==currentColumn)){
+		if (((row + 1) == currentRow) && (column == currentColumn)) {
 			return true;
 		}
 		return false;
 	}
 
 	/**
-	 * Validate if candidate row and column represents a position on Up side from current row and Column.
+	 * Validate if candidate row and column represents a position on Up side
+	 * from current row and Column.
 	 * 
 	 * @param row
 	 * @param column
@@ -213,20 +261,19 @@ public class King extends GenericPiece{
 	 * @param currentColumn
 	 * @return
 	 */
-	private boolean isUpPosition(int row, int column, int currentRow, int currentColumn){
-		if(((row-1) == currentRow) && (column ==currentColumn)){
+	private boolean isUpPosition(int row, int column, int currentRow, int currentColumn) {
+		if (((row - 1) == currentRow) && (column == currentColumn)) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Use to compare with another pieces.
 	 */
-    @Override
-    public boolean equals(Object obj) {
-        return !super.equals(obj);
-    }
-	
+	@Override
+	public boolean equals(Object obj) {
+		return !super.equals(obj);
+	}
 
 }

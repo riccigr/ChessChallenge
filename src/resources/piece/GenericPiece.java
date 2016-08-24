@@ -11,6 +11,9 @@ import resources.chessboard.Board;
  */
 public abstract class GenericPiece {
 	
+	private int row;
+	private int column;
+	
 	/**
 	 * Return a identification for this piece
 	 * 
@@ -53,7 +56,23 @@ public abstract class GenericPiece {
      */
 	public abstract List<Integer> disableSquare(int offset, Board board);
 	
-
+	public abstract boolean isInAttackArea(int row,  int column);
+	
+	public int getRow(){
+		return row;
+	}
+	
+	public int getColumn(){
+		return column;
+	}
+	
+	public void setRow( int currentRow){
+		row = currentRow;
+	}
+	
+	public void setColumn(int currentColumn){
+		column = currentColumn;
+	}
 	
 	
 }
