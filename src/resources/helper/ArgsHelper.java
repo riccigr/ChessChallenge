@@ -33,14 +33,14 @@ public class ArgsHelper {
 	 * @param index
 	 * @return
 	 */
-	public boolean isNumeric(int index) {
+	protected boolean isNumeric(int index) {
 	     try {  
 	         Integer.parseInt(args[index]);  
 	         return true;  
 	      } catch (NumberFormatException e) {  
 	    	  throw new NumberFormatException();
 	      } catch (IndexOutOfBoundsException e) {  
-	    	  throw new NumberFormatException();
+	    	  throw new IndexOutOfBoundsException();
 	      }
 	}
 
@@ -50,7 +50,7 @@ public class ArgsHelper {
 	 * @param index
 	 * @return
 	 */
-	public int convertStringToInteger(int index) {
+	public int getIntValueFromIndex(int index) {
 		if(isNumeric(index)){
 			return Integer.parseInt(args[index]);
 		}
