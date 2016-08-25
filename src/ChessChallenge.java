@@ -21,22 +21,21 @@ import resources.piece.Rook;
 public class ChessChallenge {
 
 	/**
-	 * Main function.
-	 * Arguments format expected: [rows] [columns] [queens] [rooks] [knights] [kings] [bishops].
-	 * Format: only numbers.
+	 * Main function. Arguments format expected: [rows] [columns] [queens]
+	 * [rooks] [knights] [kings] [bishops]. Format: only numbers.
 	 * 
-	 * @param argsArguments passed as parameters
+	 * @param argsArguments
+	 *            passed as parameters
 	 */
 	public static void main(String[] args) {
-
 		prepareNewBoard(args);
-
 	}
 
 	/**
 	 * Validate parameters and begin to find all configurations.
 	 * 
-	 * @param args Arguments passed as parameters.
+	 * @param args
+	 *            Arguments passed as parameters.
 	 * @return
 	 */
 	private static void prepareNewBoard(String[] args) {
@@ -47,13 +46,13 @@ public class ChessChallenge {
 			ArgsHelper validator = new ArgsHelper(args);
 
 			if (validator.hasEnoughParams()) {
-				int rows = validator.convertStringToInteger(0);
-				int columns = validator.convertStringToInteger(1);
-				int queenAmount = validator.convertStringToInteger(2);
-				int rookAmount = validator.convertStringToInteger(3);
-				int knightAmount = validator.convertStringToInteger(4);
-				int kingAmount = validator.convertStringToInteger(5);
-				int bishopAmount = validator.convertStringToInteger(6);
+				int rows = validator.getIntValueFromIndex(0);
+				int columns = validator.getIntValueFromIndex(1);
+				int queenAmount = validator.getIntValueFromIndex(2);
+				int rookAmount = validator.getIntValueFromIndex(3);
+				int knightAmount = validator.getIntValueFromIndex(4);
+				int kingAmount = validator.getIntValueFromIndex(5);
+				int bishopAmount = validator.getIntValueFromIndex(6);
 				List<GenericPiece> piecesToGame = new ArrayList<>();
 
 				for (int pieceIndex = 1; pieceIndex <= queenAmount; pieceIndex++) {
@@ -90,7 +89,7 @@ public class ChessChallenge {
 		} catch (NumberFormatException e) {
 			System.out.println("Please, enter only numbers.");
 		} catch (IndexOutOfBoundsException e) {
-			System.out.println("Parameter not found."); 
+			System.out.println("Parameter not found.");
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
