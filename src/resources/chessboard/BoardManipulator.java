@@ -36,8 +36,7 @@ public class BoardManipulator {
 		long startTime = System.currentTimeMillis();
 
 		Set<List<GenericPiece>> splitedSequence = new PieceHelper().getAllPiecesSequence(board.piecesInGame);
-		System.out.println("total de voltas: " + splitedSequence.size());
-
+		
 		for (List<GenericPiece> combination : splitedSequence) {
 			board.prepareBoard();
 			checkCombination(combination, 0, 0, board);
