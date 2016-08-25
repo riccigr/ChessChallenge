@@ -12,3 +12,10 @@ Write a program which takes as input:
 
 
 As output, the program should list all the unique configurations to the console for which all of the pieces can be placed on the board without threatening each other.
+
+Input:
+Arguments format expected: 
+[rows] [columns] [queens] [rooks] [knights] [kings] [bishops]. 
+
+Format: only numbers.
+
