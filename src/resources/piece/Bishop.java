@@ -23,46 +23,11 @@ public class Bishop extends GenericPiece {
 		return 'B';
 	}
 
-    /**
-     * Return a list with all position which cannot be used to place a piece.
-     * Its movement is base in diagonals.
-     * 
-     * @param offset value to use as a index of a 2dimension matrix(board).
-     * @param board current board layout used to get its dimensions.
-     * @see List<>
-     * @see ArrayList<>
-     */
 	@Override
-	public List<Integer> disableSquare(int offset, Board board) {
-		SquareHelper squareHelper = new SquareHelper();
-		int totalOfRows = board.getTotalRows();
-		int totalOfColumns = board.getTotalColumns();
-		int currentRow = squareHelper.getRowBasedOnOffset(offset, totalOfRows);
-		int currentColumn = squareHelper.getColumnBasedOnOffset(offset, totalOfRows, totalOfColumns);
-		Set<Integer> uniqueDisabledSquareOffset = new HashSet<>();
-
-		// UpRight from my piece
-		for (int row = currentRow, column = currentColumn; row > 0 || column <= totalOfColumns; row--, column++) {
-			uniqueDisabledSquareOffset.add(squareHelper.calculateOffset(row, column, totalOfColumns));
-		}
-		
-		// UpLeft from my piece
-		for (int row = currentRow, column = currentColumn; row > 0 && column > 0; row--, column--) {
-			uniqueDisabledSquareOffset.add(squareHelper.calculateOffset(row, column, totalOfColumns));
-		}
-		
-		// DownLeft from my piece
-		for (int row = currentRow, column = currentColumn; row <= totalOfRows && column > 0; row++, column--) {
-			uniqueDisabledSquareOffset.add(squareHelper.calculateOffset(row, column, totalOfColumns));
-		}
-		
-		// DownRight from my piece
-		for (int row = currentRow, column = currentColumn; row <= totalOfRows && column <= totalOfColumns; row++, column++) {
-			uniqueDisabledSquareOffset.add(squareHelper.calculateOffset(row, column, totalOfColumns));
-		}
-		
-		List<Integer> disabledSquareOffset = new ArrayList<>(uniqueDisabledSquareOffset);
-		return disabledSquareOffset;
+	public boolean isInAttackArea(int row, int column) {
+		if(Math.abs(this.getRow() - row) == Math.abs(this.getColumn() - column))
+			return true;
+		return false;
 	}
 	
 	/**
@@ -72,5 +37,7 @@ public class Bishop extends GenericPiece {
     public boolean equals(Object obj) {
         return !super.equals(obj);
     }
+
+
 
 }

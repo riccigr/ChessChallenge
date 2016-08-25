@@ -19,91 +19,18 @@ public class Queen extends GenericPiece {
 		return 'Q';
 	}
 
-    /**
-     * Return a list with all position which cannot be used to place a piece.
-     * Its movement is base in diagonals, Horizontal and Verticals
-     * 
-     * @param offset value to use as a index of a 2dimension matrix(board).
-     * @param board current board layout used to get its dimensions.
-     * @see List<>
-     * @see ArrayList<>
-     */
+	
 	@Override
-	public List<Integer> disableSquare(int offset, Board board) {
-		SquareHelper squareHelper = new SquareHelper();
-		int totalOfRows = board.getTotalRows();
-		int totalOfColumns = board.getTotalColumns();
-		int currentRow = squareHelper.getRowBasedOnOffset(offset, totalOfRows);
-		int currentColumn = squareHelper.getColumnBasedOnOffset(offset, totalOfRows, totalOfColumns);
-		Set<Integer> uniqueDisabledSquareOffset = new HashSet<>();
-
-		// UpRight from piece position
-		for (int row = currentRow, column = currentColumn; row > 0 || column <= totalOfColumns; row--, column++) {
-			uniqueDisabledSquareOffset.add(squareHelper.calculateOffset(row, column, totalOfColumns));
-		}
-		
-		// UpLeft from piece position
-		for (int row = currentRow, column = currentColumn; row > 0 && column > 0; row--, column--) {
-			uniqueDisabledSquareOffset.add(squareHelper.calculateOffset(row, column, totalOfColumns));
-		}
-		
-		// DownLeft from piece position
-		for (int row = currentRow, column = currentColumn; row <= totalOfRows && column > 0; row++, column--) {
-			uniqueDisabledSquareOffset.add(squareHelper.calculateOffset(row, column, totalOfColumns));
-		}
-		
-		// DownRight from piece position
-		for (int row = currentRow, column = currentColumn; row <= totalOfRows && column <= totalOfColumns; row++, column++) {
-			uniqueDisabledSquareOffset.add(squareHelper.calculateOffset(row, column, totalOfColumns));
-		}
-		
-		for(int row=1; row <= totalOfRows; row++){
-			for(int column=1; column <= totalOfColumns; column++){
-				if(isInVertical(column, currentColumn)){
-					uniqueDisabledSquareOffset.add(squareHelper.calculateOffset(row, column, totalOfColumns));
-					continue;
-				}
-				if(isInHorizontal(row, currentRow)){
-					uniqueDisabledSquareOffset.add(squareHelper.calculateOffset(row, column, totalOfColumns));
-					continue;
-				}
-			}
-		}
-		
-		List<Integer> disabledSquareOffset = new ArrayList<>(uniqueDisabledSquareOffset);
-		return disabledSquareOffset;
-	}
-	
-	/**
-	 * Validate if values are the same, to abstract when they are in the same Row.
-	 * 
-	 * @param rowCandidate 
-	 * @param currentRow
-	 * @return boolean
-	 * @see Boolean
-	 */	
-	private boolean isInHorizontal(int rowCandidate, int currentRow){
-		if(rowCandidate == currentRow){
+	public boolean isInAttackArea(int row, int column) {
+		if(Math.abs(this.getRow() - row) == Math.abs(this.getColumn() - column))
 			return true;
-		}
+		
+		if(this.getRow() == row || this.getColumn() == column)
+			return true;
+		
 		return false;
 	}
-	
-	/**
-	 * Validate if values are the same, to abstract when they are in the same Column.
-	 * 
-	 * @param columnCandidate 
-	 * @param currentColumn
-	 * @return boolean
-	 * @see Boolean
-	 */	
-	private boolean isInVertical(int columnCandidate, int currentColumn){
-		if(columnCandidate == currentColumn){
-			return true;
-		}
-		return false;
-	}
-	
+  
 	/**
 	 * Use to compare with another pieces.
 	 */
@@ -111,5 +38,7 @@ public class Queen extends GenericPiece {
     public boolean equals(Object obj) {
         return !super.equals(obj);
     }
+
+
 
 }
