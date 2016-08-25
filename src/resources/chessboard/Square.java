@@ -1,6 +1,5 @@
 package resources.chessboard;
 
-import resources.helper.SquareHelper;
 import resources.piece.GenericPiece;
 
 /**
@@ -12,8 +11,6 @@ import resources.piece.GenericPiece;
 public class Square{
 	
 	private int offset;
-	private int row;
-	private int column;
 	private GenericPiece piece;
 	private int status;
 	
@@ -28,15 +25,10 @@ public class Square{
 	 * @param initialOffset Official index.
 	 * @param board 
 	 */
-	public Square(int initialOffset, Board board){
-		SquareHelper helper = new SquareHelper();
-		
+	public Square(int initialOffset, Board board){		
 		this.offset = initialOffset;
-		this.row = helper.getRowBasedOnOffset(initialOffset, board.getTotalRows());
-		this.column = helper.getColumnBasedOnOffset(initialOffset, board.getTotalRows(), board.getTotalColumns());
 		this.status = 0;
-	}
-	
+	}	
 	
 	/**
 	 * Validate if pieces has status different of empty.
