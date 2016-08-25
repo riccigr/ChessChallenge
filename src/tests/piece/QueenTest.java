@@ -2,14 +2,9 @@ package tests.piece;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.Test;
-
-import resources.chessboard.Board;
 import resources.piece.Queen;
-import resources.piece.GenericPiece;
 
 public class QueenTest {
 	@Test
@@ -19,18 +14,50 @@ public class QueenTest {
 	}
 	
 	@Test
-	public void testGetQueenDisabledSquares(){
-		Board board = new Board(3,3, new ArrayList<GenericPiece>());
-		List<Integer> disabledSquares = new ArrayList<Integer>();
-		disabledSquares = new Queen().disableSquare(5, board);			
-		assertEquals(disabledSquares.get(0).intValue(), 1);
-		assertEquals(disabledSquares.get(1).intValue(), 2);
-		assertEquals(disabledSquares.get(2).intValue(), 3);
-		assertEquals(disabledSquares.get(3).intValue(), 4);
-		assertEquals(disabledSquares.get(4).intValue(), 5);
-		assertEquals(disabledSquares.get(5).intValue(), 6);
-		assertEquals(disabledSquares.get(6).intValue(), 7);
-		assertEquals(disabledSquares.get(7).intValue(), 8);
-		assertEquals(disabledSquares.get(8).intValue(), 9);
+	public void testGetQueenAttackPossibleAreas(){
+		Queen queen = new Queen();
+		queen.setRow(1);
+		queen.setColumn(1);
+		
+		//Positive Positions
+		//NW
+		assertEquals(queen.isInAttackArea(0, 0), true);
+		//NE
+		assertEquals(queen.isInAttackArea(0, 2), true);		
+		//SW
+		assertEquals(queen.isInAttackArea(2, 0), true);
+		//SE
+		assertEquals(queen.isInAttackArea(2, 2), true);
+		//North
+		assertEquals(queen.isInAttackArea(0, 1), true);
+		//South
+		assertEquals(queen.isInAttackArea(2, 1), true);
+		//West
+		assertEquals(queen.isInAttackArea(1, 0), true);
+		//East
+		assertEquals(queen.isInAttackArea(1, 2), true);
+		//Horizontal
+		assertEquals(queen.isInAttackArea(1, 4), true);
+		//Vertical
+		assertEquals(queen.isInAttackArea(4, 1), true);
+		//Diagonal
+		assertEquals(queen.isInAttackArea(3, 3), true);
+		assertEquals(queen.isInAttackArea(4, 4), true);
+
+
+	}
+	
+	@Test
+	public void testGetQueenAttackImpossibleAreas(){
+		Queen queen = new Queen();
+		queen.setRow(1);
+		queen.setColumn(1);
+		
+		//Negative Positions
+		assertEquals(queen.isInAttackArea(3, 0), false);
+		assertEquals(queen.isInAttackArea(3, 2), false);		
+		assertEquals(queen.isInAttackArea(3, 4), false);
+
+
 	}
 }

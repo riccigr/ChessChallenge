@@ -2,14 +2,10 @@ package tests.piece;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.Test;
 
-import resources.chessboard.Board;
 import resources.piece.Knight;
-import resources.piece.GenericPiece;
 
 public class KnightTest {
 
@@ -20,18 +16,54 @@ public class KnightTest {
 	}
 	
 	@Test
-	public void testGetKnightDisabledSquares(){
-		Board board = new Board(6,6, new ArrayList<GenericPiece>());
-		List<Integer> disabledSquares = new ArrayList<Integer>();
-		disabledSquares = new Knight().disableSquare(15, board);			
-		assertEquals(disabledSquares.get(0).intValue(), 2);
-		assertEquals(disabledSquares.get(1).intValue(), 4);
-		assertEquals(disabledSquares.get(2).intValue(), 7);
-		assertEquals(disabledSquares.get(3).intValue(), 11);
-		assertEquals(disabledSquares.get(4).intValue(), 15);
-		assertEquals(disabledSquares.get(5).intValue(), 19);
-		assertEquals(disabledSquares.get(6).intValue(), 23);
-		assertEquals(disabledSquares.get(7).intValue(), 26);
-		assertEquals(disabledSquares.get(8).intValue(), 28);
+	public void testGetKnightPossibleAttackAreas(){
+		Knight knight = new Knight();
+		knight.setRow(2);
+		knight.setColumn(2);
+		
+		//Positive Positions
+		//TopLeft
+		assertEquals(knight.isInAttackArea(0, 1), true);
+		//TopRight
+		assertEquals(knight.isInAttackArea(0, 3), true);		
+		//DownLeft
+		assertEquals(knight.isInAttackArea(4, 1), true);
+		//DownRight
+		assertEquals(knight.isInAttackArea(4, 3), true);
+		//RightTop
+		assertEquals(knight.isInAttackArea(1, 4), true);
+		//RightDown
+		assertEquals(knight.isInAttackArea(3, 4), true);
+		//LeftTop
+		assertEquals(knight.isInAttackArea(1, 0), true);
+		//LeftDown
+		assertEquals(knight.isInAttackArea(3, 0), true);
+
+	}
+	
+	@Test
+	public void testGetKnightImpossibleAttackAreas(){
+		Knight knight = new Knight();
+		knight.setRow(2);
+		knight.setColumn(2);
+		
+		//Negative Positions
+		//NW
+		assertEquals(knight.isInAttackArea(1, 1), false);
+		//NE
+		assertEquals(knight.isInAttackArea(1, 3), false);		
+		//SW
+		assertEquals(knight.isInAttackArea(3, 1), false);
+		//SE
+		assertEquals(knight.isInAttackArea(3, 3), false);
+		//North
+		assertEquals(knight.isInAttackArea(1, 2), false);
+		//South
+		assertEquals(knight.isInAttackArea(3, 2), false);
+		//West
+		assertEquals(knight.isInAttackArea(2, 1), false);
+		//East
+		assertEquals(knight.isInAttackArea(2, 3), false);
+
 	}
 }

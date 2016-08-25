@@ -2,14 +2,10 @@ package tests.piece;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.List;
-import java.util.ArrayList;
 
 import org.junit.Test;
 
-import resources.chessboard.Board;
 import resources.piece.Bishop;
-import resources.piece.GenericPiece;
 
 public class BishopTest {
 	
@@ -20,15 +16,46 @@ public class BishopTest {
 	}
 	
 	@Test
-	public void testGetBishopDisabledSquares(){
-		Board board = new Board(3,3, new ArrayList<GenericPiece>());
-		List<Integer> disabledSquares = new ArrayList<Integer>();
-		disabledSquares = new Bishop().disableSquare(5, board);			
-		assertEquals(disabledSquares.get(0).intValue(), 1);
-		assertEquals(disabledSquares.get(1).intValue(), 3);
-		assertEquals(disabledSquares.get(2).intValue(), 5);
-		assertEquals(disabledSquares.get(3).intValue(), 7);
-		assertEquals(disabledSquares.get(4).intValue(), 9);
+	public void testGetBishopPossibleAttackArea(){
+		Bishop bishop = new Bishop();
+		bishop.setRow(1);
+		bishop.setColumn(1);
+		
+		//Positive Positions
+		//NW
+		assertEquals(bishop.isInAttackArea(0, 0), true);
+		//NE
+		assertEquals(bishop.isInAttackArea(0, 2), true);		
+		//SW
+		assertEquals(bishop.isInAttackArea(2, 0), true);
+		//SE
+		assertEquals(bishop.isInAttackArea(2, 2), true);
+		//Diagonal
+		assertEquals(bishop.isInAttackArea(3, 3), true);
+		assertEquals(bishop.isInAttackArea(4, 4), true);
+
+	}
+	
+	@Test
+	public void testGetBishopImpossibleAttackArea(){
+		Bishop bishop = new Bishop();
+		bishop.setRow(1);
+		bishop.setColumn(1);
+				
+		//Negative Positions
+		//North
+		assertEquals(bishop.isInAttackArea(0, 1), false);
+		//South
+		assertEquals(bishop.isInAttackArea(2, 1), false);
+		//West
+		assertEquals(bishop.isInAttackArea(1, 0), false);
+		//East
+		assertEquals(bishop.isInAttackArea(1, 2), false);
+		//Horizontal
+		assertEquals(bishop.isInAttackArea(1, 4), false);
+		//Vertical
+		assertEquals(bishop.isInAttackArea(4, 1), false);
+
 	}
 	
 }

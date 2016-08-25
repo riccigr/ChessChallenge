@@ -2,14 +2,10 @@ package tests.piece;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.Test;
 
-import resources.chessboard.Board;
 import resources.piece.King;
-import resources.piece.GenericPiece;
 
 public class KingTest {
 	
@@ -20,19 +16,44 @@ public class KingTest {
 	}
 	
 	@Test
-	public void testGetKingDisabledSquares(){
-		Board board = new Board(3,3, new ArrayList<GenericPiece>());
-		List<Integer> disabledSquares = new ArrayList<Integer>();
-		disabledSquares = new King().disableSquare(5, board);			
-		assertEquals(disabledSquares.get(0).intValue(), 1);
-		assertEquals(disabledSquares.get(1).intValue(), 2);
-		assertEquals(disabledSquares.get(2).intValue(), 3);
-		assertEquals(disabledSquares.get(3).intValue(), 4);
-		assertEquals(disabledSquares.get(4).intValue(), 5);
-		assertEquals(disabledSquares.get(5).intValue(), 6);
-		assertEquals(disabledSquares.get(6).intValue(), 7);
-		assertEquals(disabledSquares.get(7).intValue(), 8);
-		assertEquals(disabledSquares.get(8).intValue(), 9);
+	public void testGetKingPossibleAttackAreas(){
+		King king = new King();
+		king.setRow(1);
+		king.setColumn(1);
+		
+		//Positive Positions
+		//NW
+		assertEquals(king.isInAttackArea(0, 0), true);
+		//NE
+		assertEquals(king.isInAttackArea(0, 2), true);		
+		//SW
+		assertEquals(king.isInAttackArea(2, 0), true);
+		//SE
+		assertEquals(king.isInAttackArea(2, 2), true);
+		//North
+		assertEquals(king.isInAttackArea(0, 1), true);
+		//South
+		assertEquals(king.isInAttackArea(2, 1), true);
+		//West
+		assertEquals(king.isInAttackArea(1, 0), true);
+		//East
+		assertEquals(king.isInAttackArea(1, 2), true);
+		
+	}
+	
+	@Test
+	public void testGetKingImpossibleAttackAreas(){
+		King king = new King();
+		king.setRow(1);
+		king.setColumn(1);
+		
+		//Horizontal
+		assertEquals(king.isInAttackArea(1, 4), false);
+		//Vertical
+		assertEquals(king.isInAttackArea(4, 1), false);
+		//Diagonal
+		assertEquals(king.isInAttackArea(3, 3), false);
+		assertEquals(king.isInAttackArea(4, 4), false);
 		
 	}
 

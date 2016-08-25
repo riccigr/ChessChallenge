@@ -2,14 +2,10 @@ package tests.piece;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.Test;
 
-import resources.chessboard.Board;
-import resources.piece.GenericPiece;
 import resources.piece.Rook;
+
 
 public class RookTest {
 	
@@ -20,15 +16,43 @@ public class RookTest {
 	}
 	
 	@Test
-	public void testGetRookDisabledSquares(){
-		Board board = new Board(3,3, new ArrayList<GenericPiece>());
-		List<Integer> disabledSquares = new ArrayList<Integer>();
-		disabledSquares = new Rook().disableSquare(5, board);			
-		assertEquals(disabledSquares.get(0).intValue(), 2);
-		assertEquals(disabledSquares.get(1).intValue(), 4);
-		assertEquals(disabledSquares.get(2).intValue(), 5);
-		assertEquals(disabledSquares.get(3).intValue(), 6);
-		assertEquals(disabledSquares.get(4).intValue(), 8);
+	public void testGetRookAttackPossibleAreas(){
+		Rook rook = new Rook();
+		rook.setRow(1);
+		rook.setColumn(1);
+		
+		//Positive Positions
+		//North
+		assertEquals(rook.isInAttackArea(0, 1), true);
+		//South
+		assertEquals(rook.isInAttackArea(2, 1), true);
+		//West
+		assertEquals(rook.isInAttackArea(1, 0), true);
+		//East
+		assertEquals(rook.isInAttackArea(1, 2), true);
+		//Horizontal
+		assertEquals(rook.isInAttackArea(1, 4), true);
+		//Vertical
+		assertEquals(rook.isInAttackArea(4, 1), true);
+	}
+	
+	
+	@Test
+	public void testGetRookAttackImpossibleAreas(){
+		Rook rook = new Rook();
+		rook.setRow(1);
+		rook.setColumn(1);
+		
+		//Negative Positions
+		//NW
+		assertEquals(rook.isInAttackArea(0, 0), false);
+		//NE
+		assertEquals(rook.isInAttackArea(0, 2), false);		
+		//SW
+		assertEquals(rook.isInAttackArea(2, 0), false);
+		//SE
+		assertEquals(rook.isInAttackArea(2, 2), false);
+
 	}
 
 }
