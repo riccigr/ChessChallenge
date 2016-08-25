@@ -1,13 +1,5 @@
 package resources.piece;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import resources.chessboard.Board;
-import resources.helper.SquareHelper;
-
 /**
  * Represent a Piece Bishop of Chess
  * @author Guilherme Ricci
@@ -23,8 +15,19 @@ public class Bishop extends GenericPiece {
 		return 'B';
 	}
 
+	/**
+	 * Validate if coordinates x,y can be conflicted with Squares base on original position of the piece.
+	 * It piece has it own move to validate.
+	 * Bishop validates squares in all 4 diagonals. around with difference distance equals for rows and columns.
+	 * 
+	 * @param row Axis X to be verified. Start in 0.
+	 * @param column Axis y to be verified. Start in 0.
+	 * @return boolean true if conflict.
+	 */
 	@Override
 	public boolean isInAttackArea(int row, int column) {
+		
+		//Math.abs is used to ignore negative. Difference must be equals for rows and columns.
 		if(Math.abs(this.getRow() - row) == Math.abs(this.getColumn() - column))
 			return true;
 		return false;

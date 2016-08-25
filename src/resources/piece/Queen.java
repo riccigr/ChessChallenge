@@ -1,13 +1,5 @@
 package resources.piece;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import resources.chessboard.Board;
-import resources.helper.SquareHelper;
-
 public class Queen extends GenericPiece {
 
 	/**
@@ -19,9 +11,19 @@ public class Queen extends GenericPiece {
 		return 'Q';
 	}
 
-	
+	/**
+	 * Validate if coordinates x,y can be conflicted with Squares base on original position of the piece.
+	 * It piece has it own move to validate.
+	 * Queen validates squares in all vertical, horizontal and all 4 diagonals.
+	 * 
+	 * @param row Axis X to be verified. Start in 0.
+	 * @param column Axis y to be verified. Start in 0.
+	 * @return boolean true if conflict.
+	 */
 	@Override
 	public boolean isInAttackArea(int row, int column) {
+		
+		//Math.abs is used to ignore negative. Difference must be equals for rows and columns.
 		if(Math.abs(this.getRow() - row) == Math.abs(this.getColumn() - column))
 			return true;
 		

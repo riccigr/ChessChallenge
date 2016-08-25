@@ -1,9 +1,5 @@
 package resources.piece;
 
-import java.util.List;
-
-import resources.chessboard.Board;
-
 /**
  * Represent a Generic Piece to instantiate objects which can contains any piece.
  * @author Guilherme Ricci
@@ -22,7 +18,7 @@ public abstract class GenericPiece {
 	public abstract char getAbbreviation();
 	
 	/**
-	 * Use to facilitate comparison with anohter piece.
+	 * Use to facilitate comparison with another piece.
 	 */
 	public String toString() {
 		return String.valueOf(getAbbreviation());
@@ -45,33 +41,50 @@ public abstract class GenericPiece {
 		return getAbbreviation();
 	}  
     
-    /**
-     * Return a list with all position which cannot be used to place a piece.
-     * Movement change for each piece
-     * 
-     * @param offset value to use as a index of a 2dimension matrix(board).
-     * @param board current board layout used to get its dimensions.
-     * @see List<>
-     * @see ArrayList<>
-     */
-	public abstract List<Integer> disableSquare(int offset, Board board);
-	
+	/**
+	 * Validate if coordinates x,y can be conflicted with Squares base on original position of the piece.
+	 * It piece has it own move to validate.
+	 * 
+	 * @param row Axis X to be verified. Start in 0.
+	 * @param column Axis y to be verified. Start in 0.
+	 * @return boolean true if conflict.
+	 */
 	public abstract boolean isInAttackArea(int row,  int column);
 	
+	/**
+	 * return current row (axis x)  where piece is allocated.
+	 * 
+	 * @return int Start from 0.
+	 */
 	public int getRow(){
-		return row;
+		return this.row;
 	}
 	
+	/**
+	 * return current column (axis y) where piece is allocated.
+	 * 
+	 * @return int Start from 0.
+	 */
 	public int getColumn(){
-		return column;
+		return this.column;
 	}
 	
+	/**
+	 * set current row (axis x)  where piece is allocated.
+	 * 
+	 * @return int Start from 0.
+	 */
 	public void setRow( int currentRow){
-		row = currentRow;
+		this.row = currentRow;
 	}
 	
+	/**
+	 * set current column (axis y) where piece is allocated.
+	 * 
+	 * @return int Start from 0.
+	 */
 	public void setColumn(int currentColumn){
-		column = currentColumn;
+		this.column = currentColumn;
 	}
 	
 	

@@ -1,118 +1,47 @@
 package resources.piece;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import resources.chessboard.Board;
-import resources.helper.SquareHelper;
-
 /**
  * Represent a Piece Rook of Chess
+ * 
  * @author Guilherme Ricci
  *
  */
-public class Rook extends GenericPiece{
-	
+public class Rook extends GenericPiece {
+
 	/**
 	 * Return a identification for this piece
 	 * 
 	 * @see char
 	 */
-	public char getAbbreviation(){
+	public char getAbbreviation() {
 		return 'R';
 	}
 
-    /**
-     * Return a list with all position which cannot be used to place a piece.
-     * Its movement is base in Horizontal and Verticals.
-     * 
-     * @param offset value to use as a index of a 2dimension matrix(board).
-     * @param board current board layout used to get its dimensions.
-     * @see List<>
-     * @see ArrayList<>
-     */
-	@Override
-	public List<Integer> disableSquare(int offset, Board board) {
-		SquareHelper squareHelper = new SquareHelper();
-		int totalOfRows = board.getTotalRows();
-		int totalOfColumns = board.getTotalColumns();
-		int currentRow =  squareHelper.getRowBasedOnOffset(offset, totalOfRows);
-		int currentColumn =  squareHelper.getColumnBasedOnOffset(offset, totalOfRows, totalOfColumns);
-		List<Integer> disabledSquareOffset = new ArrayList<>();
-		
-//		for(int row=1; row <= totalOfRows; row++){
-//			for(int column=1; column <= totalOfColumns; column++){
-//				if(isInVertical(column, currentColumn)){
-//					disabledSquareOffset.add(squareHelper.calculateOffset(row, column, totalOfColumns));
-//					continue;
-//				}
-//				if(isInHorizontal(row, currentRow)){
-//					disabledSquareOffset.add(squareHelper.calculateOffset(row, column, totalOfColumns));
-//					continue;
-//				}
-//			}
-//		}		
-		
-		int t = totalOfRows * totalOfColumns;
-		
-		disabledSquareOffset.add(offset);
-		
-		for(int i = 0; i< t; i++){
-			int column = i % totalOfRows;
-			int row = i / totalOfRows;
-			if(getRow() == row || getColumn() == column)
-				disabledSquareOffset.add(row * totalOfRows + column);
-		}
-		
-		return disabledSquareOffset;		
-	}
-	
+	/**
+	 * Validate if coordinates x,y can be conflicted with Squares base on original position of the piece.
+	 * It piece has it own move to validate.
+	 * Rook validates squares in all vertical and horizontal.
+	 * 
+	 * @param row Axis X to be verified. Start in 0.
+	 * @param column Axis y to be verified. Start in 0.
+	 * @return boolean true if conflict.
+	 */
 	@Override
 	public boolean isInAttackArea(int row, int column) {
 
-			if(getRow() == row || getColumn() == column){
-				return true;
-		}
-		
-		return false;	
-	}
-	
-	/**
-	 * Validate if values are the same, to abstract when they are in the same Row.
-	 * 
-	 * @param rowCandidate 
-	 * @param currentRow
-	 * @return boolean
-	 * @see Boolean
-	 */	
-	private boolean isInHorizontal(int rowCandidate, int currentRow){
-		if(rowCandidate == currentRow){
+		if (this.getRow() == row || this.getColumn() == column) {
 			return true;
 		}
+
 		return false;
 	}
-	
-	/**
-	 * Validate if values are the same, to abstract when they are in the same Column.
-	 * 
-	 * @param columnCandidate 
-	 * @param currentColumn
-	 * @return boolean
-	 * @see Boolean
-	 */	
-	private boolean isInVertical(int columnCandidate, int currentColumn){
-		if(columnCandidate == currentColumn){
-			return true;
-		}
-		return false;
-	}
-	
+
 	/**
 	 * Use to compare with another pieces.
 	 */
-    @Override
-    public boolean equals(Object obj) {
-        return !super.equals(obj);
-    }
+	@Override
+	public boolean equals(Object obj) {
+		return !super.equals(obj);
+	}
 
 }
