@@ -9,7 +9,6 @@ import resources.piece.GenericPiece;
 
 public class PieceHelper {
 
-	public static Set<String> possibleSequences;
 	public static Set<List<GenericPiece>> possiblePiecesSequences;
 
 	/**
